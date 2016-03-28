@@ -131,6 +131,8 @@ Feature: Core feature elements execution
       """
     When I run cucumber-js with `--strict`
     Then it passes
+
+  @es6
   Scenario: Step is a generator
     Given a file named "features/a.feature" with:
       """
