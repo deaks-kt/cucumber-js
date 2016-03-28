@@ -17,3 +17,11 @@ matrix:
       script: "npm run lint && npm run unit-test && npm run feature-test-ignore-es6"
 
 sudo: false
+
+deploy:
+  on:
+    branch: master
+    node: "5"
+  provider: script
+  script: scripts/deploy.sh
+  skip_cleanup: true

@@ -22,11 +22,12 @@ Cucumber.js is tested on:
 * Safari
 * Opera
 
-To see an example of `cucumber-js` in a browser:
+See an example of `cucumber-js` in a browser [here](http://cucumber.github.io/cucumber-js/)
+or run it locally by following these steps:
 
 * clone the repository
 * `$ npm install`
-* `$ node example/server.js`
+* `$ node scripts/server.js`
 * visit `http://localhost:9797`
 
 ## Usage
@@ -306,55 +307,35 @@ var myAfterHooks = function () {
 module.exports = myAfterHooks;
 ```
 
-##### Around hooks
-
-It's also possible to combine both before and after hooks in one single definition with the help of *around hooks*:
-
-```javascript
-// features/support/advanced_hooks.js
-
-myAroundHooks = function () {
-  this.Around(function (scenario, runScenario) {
-    // "this" is - as always - an instance of World promised to the scenario.
-
-    // First do the "before scenario" tasks:
-
-    this.bootFullTextSearchServer();
-    this.createSomeUsers();
-
-    // When the "before" duty is finished, tell Cucumber to execute the scenario
-    // and pass a function to be called when the scenario is finished:
-
-    // The first argument to runScenario is the error, if any, of the before tasks
-    // The second argument is a function which performs the after tasks
-    //   it can use callbacks, return a promise or be synchronous
-    runScenario(null, function () {
-      // Now, we can do our "after scenario" stuff:
-
-      this.emptyDatabase();
-      this.shutdownFullTextSearchServer();
-    });
-  });
-};
-
-module.exports = myAroundHooks;
-```
-
-As with `Before` and `After` hooks, `Around` hooks functions (both pre- and post-scenario functions) can accept a callback or return a promise if you need asynchronous operations.
-
 ##### Tagged hooks
 
-Hooks can be conditionally elected for execution based on the tags of the scenario.
+Hooks can be conditionally selected for execution based on the tags of the scenario.
 
 ``` javascript
 // features/support/hooks.js (this path is just a suggestion)
 
 var myHooks = function () {
-  this.Before("@foo", "@bar,@baz", function (scenario) {
+  this.Before({tags: ["@foo", "@bar,@baz"]}, function (scenario) {
     // This hook will be executed before scenarios tagged with @foo and either
     // @bar or @baz.
 
     // ...
+  });
+};
+
+module.exports = myHooks;
+```
+
+##### Hook timeouts
+
+Hooks timeout the same as steps and a specific hooks's timeout can be set with:
+
+```js
+// features/step_definitions/hooks.js
+
+var myHooks = function () {
+  this.Before({timeout: 60 * 1000}, function (scenario) {
+    // Does some slow initialization
   });
 };
 
